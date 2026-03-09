@@ -11,9 +11,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       - name: Install and Build
         run: |
-          npm install
+          # Menggunakan 'npm ci' lebih stabil untuk CI/CD dibanding 'npm install'
+          # Jika gagal, kita paksa install binding yang hilang
+          npm ci || (npm install --force && npm install @rolldown/binding-linux-x64-gnu)
           npm run build
 
       - name: Deploy
