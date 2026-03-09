@@ -15,13 +15,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install and Build
         run: |
-          # Menggunakan 'npm ci' lebih stabil untuk CI/CD dibanding 'npm install'
-          # Jika gagal, kita paksa install binding yang hilang
-          npm ci || (npm install --force && npm install @rolldown/binding-linux-x64-gnu)
+          
+          rm -rf package-lock.json node_modules
+          
+          npm install
+          
+          npm install @rolldown/binding-linux-x64-gnu
+  
           npm run build
 
       - name: Deploy
