@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+# IZIN AKSES: Sangat penting agar robot GitHub bisa mem-push hasil build ke branch gh-pages
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -18,13 +22,16 @@ jobs:
 
       - name: Install and Build
         run: |
-          
+          # 1. Hapus cache lama agar tidak ada konflik binding OS
           rm -rf package-lock.json node_modules
           
+          # 2. Install ulang secara fresh
           npm install
           
+          # 3. Paksa install binding Linux untuk Rolldown (Vite 6)
           npm install @rolldown/binding-linux-x64-gnu
-  
+          
+          # 4. Jalankan build
           npm run build
 
       - name: Deploy
