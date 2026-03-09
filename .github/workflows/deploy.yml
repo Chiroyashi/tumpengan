@@ -18,11 +18,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          # Kita matikan cache sementara agar tidak membawa error binding lama
+          # cache: 'npm' 
 
       - name: Install and Build
         run: |
-          npm install
+          # 1. Hapus lockfile lama di runner agar tidak bentrok dengan versi Beta sebelumnya
+          rm -rf package-lock.json node_modules
+          
+          # 2. Install ulang secara bersih (Clean Install)
+          # Kita gunakan --legacy-peer-deps jika ada konflik versi React 18/19
+          npm install --legacy-peer-deps
+          
+          # 3. Jalankan build
           npm run build
 
       - name: Deploy
